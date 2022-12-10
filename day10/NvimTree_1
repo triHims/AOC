@@ -1,0 +1,50 @@
+
+
+[NvimTree] unknown option: update_to_buf_dir | [NvimTree] unknown option: view.height | [NvimTree] unknown option: view.auto_resize | [NvimTree] unknown option: git_hl | [NvimTree] unknown option: disable_window_picker | [NvimTree] unknown option: root_folder_modifier | [NvimTree] unknown option: show_icons | [NvimTree] unknown option: quit_on_open | see :help nvim-tree-setup for available configuration options
+true
+Flutter loaded
+Error detected while processing BufWinEnter Autocommands for "*":
+E5108: Error executing lua Vim:E6100: "log" is not a valid stdpath
+stack traceback:
+[C]: in function 'stdpath'
+.../site/pack/packer/start/LuaSnip/lua/luasnip/util/log.lua:4: in main chunk
+[C]: in function 'require'
+...nvim/site/pack/packer/start/LuaSnip/lua/luasnip/init.lua:15: in main chunk
+[C]: in function 'require'
+...ck/packer/start/LuaSnip/lua/luasnip/loaders/from_lua.lua:29: in main chunk
+[C]: in function 'require'
+[string ":lua"]:1: in main chunk
+E5108: Error executing lua ...cker/start/LuaSnip/lua/luasnip/loaders/from_snipmate.lua:1: loop or previous error loading module 'luasnip'
+stack traceback:
+[C]: in function 'require'
+...cker/start/LuaSnip/lua/luasnip/loaders/from_snipmate.lua:1: in main chunk
+[C]: in function 'require'
+[string ":lua"]:1: in main chunk
+E5108: Error executing lua ...packer/start/LuaSnip/lua/luasnip/loaders/from_vscode.lua:1: loop or previous error loading module 'luasnip'
+stack traceback:
+[C]: in function 'require'
+...packer/start/LuaSnip/lua/luasnip/loaders/from_vscode.lua:1: in main chunk
+[C]: in function 'require'
+[string ":lua"]:1: in main chunk
+    [NvimTree] Following options were moved to setup, see bit.ly/3vIpEOJ: nvim_tree_icons
+[NvimTree] auto close feature has been removed, see note in the README (tips & reminder section)
+    Error detected while processing function <SNR>44_LocalVimRC:
+    line  156:
+    Error executing vim.schedule lua callback: ...e/pack/packer/start/nvim-tree.lua/lua/nvim-tree/view.lua:94: Vim(lua):E5108: Error executing lua [string ":lua"]:1: loop or previous error loading module 'luasnip'
+                                                                                                                        stack traceback:
+                                                                                                                        [C]: in function 'require'
+                                                                                                                        [string ":lua"]:1: in main chunk
+                                                                                                                        [C]: in function '__newindex'
+                                                                                                                        ...e/pack/packer/start/nvim-tree.lua/lua/nvim-tree/view.lua:94: in function 'create_buffer'
+                                                                                                                        ...e/pack/packer/start/nvim-tree.lua/lua/nvim-tree/view.lua:317: in function 'open_in_current_win'
+                                                                                                                        ...te/pack/packer/start/nvim-tree.lua/lua/nvim-tree/lib.lua:160: in function 'open'
+                                                                                                                        ...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:270: in function 'on_enter'
+                                                                                                                        ...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:818: in function <...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:817>
+                                                                                                                        stack traceback:
+                                                                                                                        [C]: in function '__newindex'
+                                                                                                                        ...e/pack/packer/start/nvim-tree.lua/lua/nvim-tree/view.lua:94: in function 'create_buffer'
+                                                                                                                        ...e/pack/packer/start/nvim-tree.lua/lua/nvim-tree/view.lua:317: in function 'open_in_current_win'
+                                                                                                                        ...te/pack/packer/start/nvim-tree.lua/lua/nvim-tree/lib.lua:160: in function 'open'
+                                                                                                                        ...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:270: in function 'on_enter'
+                                                                                                                        ...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:818: in function <...m/site/pack/packer/start/nvim-tree.lua/lua/nvim-tree.lua:817>
+

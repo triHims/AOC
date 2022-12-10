@@ -1,0 +1,71 @@
+let s:self = {}
+if exists('*nvim_create_namespace')
+  let s:self._hi_namespace = nvim_create_namespace('singlefile-make-diag')
+endif
+
+
+"lua Function Begin
+lua << EOF
+--this function is required to map serverity
+--when pushed quickfix list to diagnostics the severity is set to error
+--We need to fix it
+function mapSeverity(message)
+  local indicator = string.match(message, "%a+")
+
+    if indicator=="warning" then return 2
+    elseif indicator=="error" then return 1
+    else return 3
+    end
+end
+
+function _transformToNewDiaTable(tableVar) 
+    for i = 1, #tableVar do
+        tableVar[i].severity= mapSeverity(tableVar[i].message)
+    end
+    return tableVar
+end
+EOF
+"lua Function Begin
+
+
+
+set makeprg=javac\ -Xlint:unchecked\ -d\ target\ % 
+
+
+nmap <F6> :call <SID>RunSingleFile()<CR>
+nmap <F7> :copen<CR>
+ 
+if exists('s:self["_hi_namespace"]') 
+    function! s:self.singleFile() 
+        let l:curBuf = bufnr()
+"lua Function begin
+lua << EOF
+    
+--we now just get the namespace and current current buffer and push in the diagnostics
+        local namespace = vim.api.nvim_eval("s:self._hi_namespace")
+        local buf  = vim.api.nvim_eval("l:curBuf")
+        -- line below gets the data from qflist ( getqflist() ) 
+        local diag = vim.diagnostic.fromqflist( vim.api.nvim_call_function('getqflist',{}))
+        
+        local transDiag = _transformToNewDiaTable(diag)
+        vim.diagnostic.set(namespace,buf,transDiag,{})
+EOF
+"lua Function end
+    endfunction
+"This funciton runs the other funcitons in script one by one 
+    function! s:self.runSingle()
+          :make! 
+          call s:self.singleFile()
+    endfunction
+
+endif
+
+function! s:RunSingleFile()
+    call s:self.runSingle()
+endfunction
+
+    
+augroup singleFileRunnerTri 
+    autocmd! singleFileRunnerTri
+    autocmd bufwritepost *.java silent! :call s:RunSingleFile()
+augroup end
