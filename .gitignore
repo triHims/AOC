@@ -1,0 +1,6 @@
+**/.venv/
+**/.lvimrc
+**/.vscode/
+**/target/
+**/.idea/
+**/out
