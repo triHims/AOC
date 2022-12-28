@@ -40,8 +40,6 @@ def processInput(reader):
 
 
 
-def traverseComplete(currentPoint,timeLeft,visitedList):
-    pass   
 
 def allPairsShortestPath(g):
     """Return distance structure as computed"""
@@ -68,106 +66,35 @@ def allPairsShortestPath(g):
     return dist
     
     
-Deeepe = {}    
 
-class CustomVisiter:
-    def __init__(self,*args) -> None:
-
-        if(len(args)==0):
-            self.keys=[]
-            self.mapper={}
-            self.vals=0
-            return
-
-
-        copyLst = list(args[0])
-        copyLst.sort()
-        self.keys=copyLst
-        self.mapper={}
-
-        for i in range(len(copyLst)):
-            self.mapper[copyLst[i]]=i
-
-        self.vals = 1<<(len(copyLst)+2)
-    
-    
-    
-    def markVisit(self,key:str):
-        loc = self.mapper[key]
-        self.vals=self.vals|1<<loc
-
-    def getVisit(self,key:str):
-        loc = self.mapper[key]
-        out=self.vals&(1<<loc)
-        return True if out>0 else False
-        
-    
-    def getHash(self):
-        return self.vals
-    
-    def copy(self):
-        neObj = CustomVisiter()
-        neObj.keys=self.keys
-        neObj.mapper=self.mapper
-        neObj.vals=self.vals
-        return neObj
-
-
-        
-
-
-def processNodes(nodeBoy,nodeEle,timeBoy,timeEle,visit:CustomVisiter):
+def processNodes(node,time,visit:dict,nodeList,ans,nodeArr,goodValList):
 
     # print(f"we have nodeBoy={nodeBoy}  at time {timeBoy}\n nodeEle={nodeEle}  at time {timeEle} with \n dict {bin(visit.getHash())}\n\n" )
 
-    if(Deeepe.get((nodeBoy,nodeEle,timeBoy,timeEle,visit.getHash()))!=None):
-        return Deeepe.get((nodeBoy,nodeEle,timeBoy,timeEle,visit.getHash()))
 
-    def process(timeBoy,timeEle):
-        result=0
-        visit.markVisit(nodeBoy)
-        visit.markVisit(nodeEle)
-        if(timeBoy>0 and  nodeFlowMap[nodeBoy]>0):
-            result+=(timeBoy-1)*nodeFlowMap[nodeBoy]
-            timeBoy-=1
-        
-        if(timeEle>0 and nodeFlowMap[nodeEle]>0):
-            result+=(timeEle-1)*nodeFlowMap[nodeEle]
-            timeEle-=1
+    visit[node]=True
+    nodeArr.append(node)
+    
 
-        ans = 0
-        if(timeBoy>0 or timeEle>0):
-            localReachBoy = apsp[nodeBoy]
-            localReachEle = apsp[nodeEle]
-            localCostBoy = {locNode: ((timeBoy-1-reach)*nodeFlowMap[locNode]) for locNode,reach in localReachBoy.items() if not visit.getVisit(locNode) }
-            localCostEle = {locNode: ((timeEle-1-reach)*nodeFlowMap[locNode]) for locNode,reach in localReachEle.items() if not visit.getVisit(locNode) }
-            for locEleNode,flowEle in localCostEle.items():
-                for locBoyNode,flowBoy in localCostBoy.items():
-                    if(locBoyNode==locEleNode):
-                        continue
-                    nextBoyNode=nodeBoy
-                    nextEleNode=nodeEle
-                    nextTimeBoy=timeBoy
-                    nextTimeEle=timeEle
-                    if(timeBoy>0 and flowBoy>0 and locBoyNode!=nodeBoy):
-                        nextBoyNode=locBoyNode
-                        nextTimeBoy=timeBoy-localReachBoy[locBoyNode]
 
-                    if(timeEle>0 and flowEle>0 and locEleNode!=nodeEle):
-                        nextEleNode=locEleNode
-                        nextTimeEle=timeEle-localReachEle[locEleNode]
-                    ans = max(ans,processNodes(nextBoyNode,nextEleNode,nextTimeBoy,nextTimeEle,visit.copy()))
-        return result+ans
+
+    notRun=True
+    if(time>0):
+        localReach = apsp[node]
+        localCost = {locNode: [time-1-localReach[locNode],((time-1-localReach[locNode])*nodeFlowMap[locNode])] for locNode in nodeList if visit.get(locNode)!=True and time-1-localReach[locNode] >= 0 }
+        for nextNode,nodeFlow in localCost.items():
+            notRun=False
+            processNodes(nextNode,nodeFlow[0],visit.copy(),nodeList,ans+nodeFlow[1],nodeArr[:],goodValList)
+    
+    goodValList.append([ans,nodeArr])
+
 
 
     
     
-    computedAns = process(timeBoy,timeEle)
     
         
-    Deeepe[(nodeBoy,nodeEle,timeBoy,timeEle,visit.getHash())]= computedAns
     
-    return computedAns     # if(nodeFlowMap[node]==0):
     #     return process(False,time)
     # else:
     #     return max(process(False,time),process(True,time))
@@ -190,11 +117,29 @@ nodeFlowMap,nodeAdjMap=processInput(reader)
 
 apsp = allPairsShortestPath(nodeAdjMap)
 
-ans=0
-visit = CustomVisiter(nodeFlowMap.keys())
 
-print(processNodes('AA','AA',26,26,visit))
+positiveValList=[node for node ,flow in nodeFlowMap.items() if flow > 0  ]
+
+goodValList=[]
+processNodes('AA',26,{},positiveValList,0,[],goodValList)
+
+finalAns = 0
+
+for ans,combination in goodValList:
+    secondGoodVal=[]
+    newList = [ element for element in positiveValList if element not in combination ] 
+
+    processNodes('AA',26,{},newList,0,[],secondGoodVal)
+
+    maxOfSecondGoodVals=max(val for val,lst in secondGoodVal)
+    finalAns = max(finalAns,maxOfSecondGoodVals+ans)
 
 
+
+    
+
+
+
+print(f"{finalAns} -- is answer")
 
 reader.close()
